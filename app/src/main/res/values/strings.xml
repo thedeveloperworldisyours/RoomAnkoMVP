@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RoomAnkoMVP</string>
+    <string name="task_activity_add_task">To add task</string>
+    <string name="task_activity_add">Add</string>
 </resources>

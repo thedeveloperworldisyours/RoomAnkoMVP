@@ -9,7 +9,7 @@ import java.util.*
  */
 class TaskPresenter constructor(val taskDao: TaskDao) {
 
-    val compositeDisposable = CompositeDisposable()
+
     var tasks = ArrayList<Task>()
 
     var presentation: TaskPresentation? = null
@@ -20,7 +20,6 @@ class TaskPresenter constructor(val taskDao: TaskDao) {
     }
 
     fun onDestroy() {
-        compositeDisposable.dispose()
         presentation = null
     }
 
