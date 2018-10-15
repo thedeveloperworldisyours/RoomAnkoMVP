@@ -54,4 +54,15 @@ class TaskPresenter constructor(val taskDao: TaskDao) {
         }
     }
 
+    fun addTask(task: Task){
+        doAsync {
+            val idTask = TasksApp.database.taskDao().insertTask(task)
+            val recoveryTask = TasksApp.database.taskDao().findTaskById(idTask)
+            uiThread {
+                tasks.add(recoveryTask)
+                presentation?.add(tasks)
+            }
+        }
+    }
+
 }

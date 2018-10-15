@@ -1,5 +1,6 @@
 package com.thedeveloperworldisyours.roomankomvp.task
 
+import android.content.Context
 import com.thedeveloperworldisyours.roomankomvp.database.Task
 
 /**
@@ -14,5 +15,11 @@ interface TaskPresentation {
     fun setUpRecyclerView(tasks: List<Task>)
 
     fun notifyItemRemoved(position: Int)
+
+    fun add(tasks: MutableList<Task>)
+
+    fun clearFocus()
+
+    fun Context.hideKeyboard()
 
 }

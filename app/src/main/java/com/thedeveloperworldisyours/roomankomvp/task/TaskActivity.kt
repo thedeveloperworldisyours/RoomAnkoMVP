@@ -1,8 +1,11 @@
 package com.thedeveloperworldisyours.roomankomvp.task
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.inputmethod.InputMethodManager
 import com.thedeveloperworldisyours.roomankomvp.R
 import com.thedeveloperworldisyours.roomankomvp.database.Task
 import kotlinx.android.synthetic.main.task_activity.*
@@ -19,7 +22,7 @@ class TaskActivity : AppCompatActivity(), TaskPresentation {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.task_activity)
 
-        task_button?.setOnClickListener({ presenter.addNewTask(task_editText.text.toString()) })
+        task_button?.setOnClickListener({ presenter.addTask(Task(description = task_editText.text.toString()))})
 
         presenter.onCreate(this)
     }
@@ -46,5 +49,20 @@ class TaskActivity : AppCompatActivity(), TaskPresentation {
 
     override fun notifyItemRemoved(position: Int) {
         adapter.notifyItemRemoved(position)
+    }
+
+    override fun clearFocus(){
+        task_editText.setText("")
+    }
+
+    override fun Context.hideKeyboard() {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+    }
+
+    override fun add(tasks: MutableList<Task>) {
+        adapter.notifyItemInserted(tasks.size)
+        clearFocus()
+        hideKeyboard()
     }
 }
