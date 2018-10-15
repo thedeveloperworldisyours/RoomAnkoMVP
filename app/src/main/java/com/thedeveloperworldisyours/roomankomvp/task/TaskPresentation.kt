@@ -7,10 +7,12 @@ import com.thedeveloperworldisyours.roomankomvp.database.Task
  */
 interface TaskPresentation {
 
-    fun showTasks(tasks: List<Task>)
-
     fun taskAddedAt(position: Int)
 
     fun scrollTo(position: Int)
+
+    fun setUpRecyclerView(tasks: List<Task>)
+
+    fun notifyItemRemoved(position: Int)
 
 }

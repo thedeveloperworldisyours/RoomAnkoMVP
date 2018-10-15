@@ -1,4 +1,8 @@
 package com.thedeveloperworldisyours.roomankomvp.task
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.thedeveloperworldisyours.roomankomvp.R
 import com.thedeveloperworldisyours.roomankomvp.database.Task
 import kotlinx.android.synthetic.main.task_item.view.*
@@ -6,23 +10,32 @@ import kotlinx.android.synthetic.main.task_item.view.*
 /**
  * Created by javiergonzalezcabezas on 14/10/18.
  */
-class TaskAdapter(var tasks: List<Task>) : android.support.v7.widget.RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+class TaskAdapter(
+        val tasks: List<Task>,
+        val checkTask: (Task) -> Unit,
+        val deleteTask: (Task) -> Unit) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: android.view.ViewGroup, type: Int): TaskViewHolder {
-        return TaskViewHolder(parent)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = tasks[position]
+        holder.bind(item, checkTask, deleteTask)
     }
 
-    override fun onBindViewHolder(viewHolder: TaskViewHolder, position: Int) {
-        viewHolder.bind(tasks[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return ViewHolder(layoutInflater.inflate(R.layout.task_item, parent, false))
     }
 
-    override fun getItemCount(): Int = tasks.size
+    override fun getItemCount(): Int {
+        return tasks.size
+    }
 
-    inner class TaskViewHolder(parent: android.view.ViewGroup) : android.support.v7.widget.RecyclerView.ViewHolder(android.view.LayoutInflater.from(parent.context).inflate(R.layout.task_item, parent, false)) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(task: Task) = with(itemView) {
-            task_item_done_checkBox.text = task.description
+        fun bind(task: Task, checkTask: (Task) -> Unit, deleteTask: (Task) -> Unit) = with(itemView){
+            task_item_textView.text = task.description
             task_item_done_checkBox.isChecked = task.completed
+            task_item_done_checkBox.setOnClickListener{checkTask(task)}
+            setOnClickListener { deleteTask(task) }
         }
     }
 }

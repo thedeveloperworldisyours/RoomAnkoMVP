@@ -13,12 +13,11 @@ import kotlinx.android.synthetic.main.task_activity.*
 class TaskActivity : AppCompatActivity(), TaskPresentation {
 
     lateinit var presenter: TaskPresenter
+    lateinit var adapter: TaskAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.task_activity)
-        task_recyclerView?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        task_recyclerView?.adapter = TaskAdapter(emptyList())
 
         task_button?.setOnClickListener({ presenter.addNewTask(task_editText.text.toString()) })
 
@@ -30,15 +29,22 @@ class TaskActivity : AppCompatActivity(), TaskPresentation {
         super.onDestroy()
     }
 
-    override fun showTasks(tasks: List<Task>) {
-        task_recyclerView.adapter = TaskAdapter(tasks)
-    }
-
     override fun taskAddedAt(position: Int) {
         task_recyclerView.adapter?.notifyItemInserted(position)
     }
 
     override fun scrollTo(position: Int) {
         task_recyclerView.smoothScrollToPosition(position)
+    }
+
+    override fun setUpRecyclerView(tasks: List<Task>) {
+        adapter = TaskAdapter(tasks, { presenter.updateTask(it) }, {presenter.deleteTask(it)})
+        task_recyclerView.setHasFixedSize(true)
+        task_recyclerView.layoutManager = LinearLayoutManager(this)
+        task_recyclerView.adapter = adapter
+    }
+
+    override fun notifyItemRemoved(position: Int) {
+        adapter.notifyItemRemoved(position)
     }
 }
